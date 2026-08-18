@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<!--
+  Royal College of Physicians - Outside meeting rooms, Level 10
+  The Spine, Paddington Village.
+
+  LEGACY BUILD, written for the Onelan / Reserva NTB player (NTB 11.x, WebKit 531).
+  That browser is Safari 4 era, so this file deliberately avoids everything it
+  cannot parse or paint:
+    - no fetch, no Promise, no async/await   (XMLHttpRequest with callbacks)
+    - no arrow functions, let/const, template literals, classes  (plain ES3)
+    - no Map, Object.entries, Array.find/includes  (small polyfills below)
+    - no CSS variables, flexbox or grid       (absolute positioning in pixels)
+    - no inline SVG                           (the trend chart is built from divs)
+    - no web fonts                            (falls back to the player's own fonts)
+
+  Designed for a fixed 800 x 1280 portrait panel.
+
+  If the panel still cannot reach Airthings directly, its browser is probably
+  blocking the cross-origin request or cannot negotiate TLS to the API. Set
+  DATA_URL below to the address of rcp-airthings-monitor.php on your own server
+  and this page will read from that instead, which removes both problems.
+
+  Note: the API client id and secret are in plain text below. Anyone who can open
+  or view-source this file can read the estate's sensor data.
+-->
+<html lang="en-GB">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="refresh" content="21600">
+<title>Outside meeting rooms - Indoor Environment</title>
+<style type="text/css">
+html, body {
+  margin: 0; padding: 0; width: 800px; height: 1280px;
+  background: #1b2840; color: #ffffff; overflow: hidden;
+  font-family: Arial, "DejaVu Sans", Helvetica, sans-serif;
+}
+#page { position: relative; width: 800px; height: 1280px; }
+
+/* header */
+#head { position: absolute; left: 0; top: 0; width: 800px; height: 96px;
+        border-bottom: 1px solid #38445c; }
+#logo { position: absolute; left: 26px; top: 24px; width: 180px; height: 48px; }
+#brand { position: absolute; left: 226px; top: 26px; width: 330px; }
+#brandTitle { font-family: Georgia, "DejaVu Serif", "Times New Roman", serif;
+              font-weight: bold; font-size: 23px; }
+#brandSub { font-size: 13px; color: #9aa3b7; letter-spacing: 1px; margin-top: 5px; }
+#clock { position: absolute; right: 26px; top: 22px; width: 220px; text-align: right;
+         font-family: "DejaVu Sans Mono", "Courier New", monospace; font-size: 32px; }
+#live { position: absolute; right: 26px; top: 62px; width: 260px; text-align: right;
+        font-size: 13px; color: #9aa3b7; }
+#live b { color: #59d8a1; }
+
+/* red banner, only shown when something is wrong */
+#alert { position: absolute; left: 0; top: 0; width: 800px; padding: 14px 26px;
+         background: #a22027; color: #fff; font-size: 15px; display: none; z-index: 20; }
+
+/* room heading */
+#roomName { position: absolute; left: 26px; top: 118px; width: 748px;
+            font-family: Georgia, "DejaVu Serif", "Times New Roman", serif;
+            font-weight: bold; font-size: 46px; line-height: 50px; }
+#roomMeta { position: absolute; left: 26px; top: 182px; width: 520px;
+            font-size: 16px; color: #9aa3b7; }
+#floorTag { position: absolute; left: 26px; top: 214px; padding: 6px 16px;
+            border: 1px solid #3f7f68; color: #59d8a1; font-size: 14px; letter-spacing: 2px; }
+#stateWord { position: absolute; right: 26px; top: 204px; width: 380px; text-align: right;
+             font-family: Georgia, "DejaVu Serif", "Times New Roman", serif;
+             font-weight: bold; font-size: 30px; }
+#stateSub { position: absolute; right: 26px; top: 244px; width: 380px; text-align: right;
+            font-size: 12px; letter-spacing: 2px; color: #9aa3b7; }
+
+/* hero panel */
+#hero { position: absolute; left: 26px; top: 300px; width: 748px; height: 440px;
+        background: #232f48; border: 1px solid #38445c; }
+#heroLabel { position: absolute; left: 24px; top: 20px; font-size: 17px;
+             letter-spacing: 2px; color: #9aa3b7; }
+#heroValue { position: absolute; left: 22px; top: 46px; width: 700px;
+             font-family: "DejaVu Sans Mono", "Courier New", monospace;
+             font-size: 118px; line-height: 118px; white-space: nowrap; }
+#heroValue .u { font-family: Arial, "DejaVu Sans", sans-serif; font-size: 30px; color: #c3c9d6; }
+#heroStats { position: absolute; left: 24px; top: 186px; width: 700px;
+             font-family: "DejaVu Sans Mono", "Courier New", monospace;
+             font-size: 15px; color: #9aa3b7; }
+/* chart: one absolutely positioned bar per sample, no SVG needed */
+#chart { position: absolute; left: 24px; top: 220px; width: 700px; height: 158px; }
+#chart .bar { position: absolute; bottom: 0; width: 5px; background: #59d8a1; }
+#chart { height: 178px; }
+
+/* metric tiles, two columns by three rows */
+.tile { position: absolute; width: 366px; height: 138px;
+        background: #232f48; border: 1px solid #38445c; }
+.tileLab { position: absolute; left: 20px; top: 18px; font-size: 14px;
+           letter-spacing: 2px; color: #9aa3b7; }
+.tileVal { position: absolute; left: 20px; top: 46px;
+           font-family: "DejaVu Sans Mono", "Courier New", monospace; font-size: 44px; }
+.tileUnit { font-family: Arial, "DejaVu Sans", sans-serif; font-size: 17px; color: #c3c9d6; }
+
+/* footer */
+#foot { position: absolute; left: 0; top: 1224px; width: 800px; height: 55px;
+        border-top: 1px solid #38445c; }
+#footLeft { position: absolute; left: 26px; top: 18px; font-size: 14px; color: #9aa3b7; }
+#footRight { position: absolute; right: 26px; top: 18px; font-size: 14px; color: #9aa3b7; }
+
+.good { color: #59d8a1; }
+.fair { color: #ffcc53; }
+.poor { color: #ff9862; }
+.dorm { color: #9aa3b7; }
+</style>
+</head>
+<body>
+
+<div id="page">
+  <div id="alert"></div>
+
+  <div id="head">
+    <img id="logo" alt="Royal College of Physicians" src="data:image/png;base64,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">
+    <div id="brand">
+      <div id="brandTitle">Indoor Environment</div>
+      <div id="brandSub">LEVEL 10 &middot; THE SPINE</div>
+    </div>
+    <div id="clock">--:--</div>
+    <div id="live">Connecting to Airthings</div>
+  </div>
+
+  <div id="roomName">Outside meeting rooms</div>
+  <div id="roomMeta">Waiting for the first reading</div>
+  <div id="floorTag">LEVEL 10</div>
+  <div id="stateWord">&nbsp;</div>
+  <div id="stateSub">AIR QUALITY</div>
+
+  <div id="hero">
+    <div id="heroLabel">CO2 OVER 24 HOURS</div>
+    <div id="heroValue">&ndash;</div>
+    <div id="heroStats">reading history</div>
+    <div id="chart"></div>
+  </div>
+
+  <div class="tile" id="tile0" style="left:26px;  top:764px;"></div>
+  <div class="tile" id="tile1" style="left:408px; top:764px;"></div>
+  <div class="tile" id="tile2" style="left:26px;  top:918px;"></div>
+  <div class="tile" id="tile3" style="left:408px; top:918px;"></div>
+  <div class="tile" id="tile4" style="left:26px;  top:1072px;"></div>
+  <div class="tile" id="tile5" style="left:408px; top:1072px;"></div>
+
+  <div id="foot">
+    <div id="footLeft">Updating every 5 minutes</div>
+    <div id="footRight">&nbsp;</div>
+  </div>
+</div>
+
+<script type="text/javascript">
+/* =========================================================================
+ * CONFIGURATION
+ * ====================================================================== */
+var CLIENT_ID     = "d5b3d738-f09c-4f89-8939-ab595b334cf0";
+var CLIENT_SECRET = "9f705a28-a3a9-4c64-b6a2-eec50f22a3db";
+
+/* The sensor this screen shows, and how it is labelled. */
+var SERIAL    = "2969002772";          /* Outside meeting rooms */
+var ROOM_NAME = "Outside meeting rooms";
+var FLOOR     = "Level 10";
+
+/* Fallback for players that cannot call the Airthings API directly.
+   Point this at rcp-airthings-monitor.php on your own server, for example
+   "http://spine-server/airthings/rcp-airthings-monitor.php", and the page will
+   read from there instead. Serve this file from the same server to avoid
+   cross-origin requests altogether. Leave blank to talk to Airthings direct. */
+var DATA_URL = "";
+
+var REFRESH_MS   = 300000;   /* five minutes */
+var REQUEST_MS   = 20000;    /* give up on a request after twenty seconds */
+var RELOAD_HOURS = 6;
+
+/* =========================================================================
+ * POLYFILLS - WebKit 531 predates most of ES5
+ * ====================================================================== */
+if (!Array.prototype.indexOf) {
+  Array.prototype.indexOf = function (item) {
+    for (var i = 0; i < this.length; i++) { if (this[i] === item) { return i; } }
+    return -1;
+  };
+}
+if (!Array.prototype.forEach) {
+  Array.prototype.forEach = function (fn) {
+    for (var i = 0; i < this.length; i++) { fn(this[i], i, this); }
+  };
+}
+if (!Object.keys) {
+  Object.keys = function (obj) {
+    var out = [], k;
+    for (k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) { out.push(k); } }
+    return out;
+  };
+}
+if (!Date.now) { Date.now = function () { return new Date().getTime(); }; }
+
+/* =========================================================================
+ * METRICS
+ * bands: lower is better. window: middle is best. up: higher is better.
+ * ====================================================================== */
+var METRICS = [
+  { k: "co2",      label: "CO2",         unit: "ppm",   dp: 0, bands: [800, 1000] },
+  { k: "temp",     label: "TEMPERATURE", unit: "&deg;C", dp: 1, window: [18, 25, 16, 27] },
+  { k: "humidity", label: "HUMIDITY",    unit: "%",     dp: 0, window: [30, 60, 25, 70] },
+  { k: "voc",      label: "VOC",         unit: "ppb",   dp: 0, bands: [250, 2000] },
+  { k: "pm25",     label: "PM2.5",       unit: "&micro;g/m&sup3;", dp: 1, bands: [10, 25] },
+  { k: "pm1",      label: "PM1",         unit: "&micro;g/m&sup3;", dp: 1, bands: [10, 25] },
+  { k: "pm10",     label: "PM10",        unit: "&micro;g/m&sup3;", dp: 1, bands: [25, 50] },
+  { k: "sla",      label: "SOUND LEVEL", unit: "dBA",   dp: 0 },
+  { k: "virusRisk", label: "VIRUS RISK", unit: "",      dp: 0, bands: [30, 60] },
+  { k: "airExchangeRate", label: "AIR EXCHANGE", unit: "ACH", dp: 2 },
+  { k: "pressure", label: "PRESSURE",    unit: "hPa",   dp: 0 },
+  { k: "light",    label: "LIGHT LEVEL", unit: "",      dp: 0 },
+  { k: "battery",  label: "BATTERY",     unit: "%",     dp: 0, up: [20, 10] }
+];
+var HERO_KEY = "co2";
+/* Which metrics fill the six tiles, in order of preference. */
+var TILE_KEYS = ["temp", "humidity", "voc", "pm25", "pm1", "pm10", "sla", "virusRisk",
+                 "airExchangeRate", "pressure", "light", "battery"];
+
+function metricFor(key) {
+  for (var i = 0; i < METRICS.length; i++) { if (METRICS[i].k === key) { return METRICS[i]; } }
+  return null;
+}
+
+function statusOf(key, value) {
+  var m = metricFor(key);
+  if (!m || value === null || value === undefined) { return ""; }
+  var v = Number(value);
+  if (isNaN(v)) { return ""; }
+  if (m.bands) { return v <= m.bands[0] ? "good" : (v <= m.bands[1] ? "fair" : "poor"); }
+  if (m.window) {
+    if (v >= m.window[0] && v <= m.window[1]) { return "good"; }
+    if (v >= m.window[2] && v <= m.window[3]) { return "fair"; }
+    return "poor";
+  }
+  if (m.up) { return v >= m.up[0] ? "good" : (v >= m.up[1] ? "fair" : "poor"); }
+  return "";
+}
+
+function worstOf(data) {
+  var order = { "": 0, good: 1, fair: 2, poor: 3 };
+  var worst = "";
+  for (var i = 0; i < METRICS.length; i++) {
+    var k = METRICS[i].k;
+    if (k === "battery") { continue; }
+    var s = statusOf(k, data[k]);
+    if (order[s] > order[worst]) { worst = s; }
+  }
+  return worst;
+}
+
+function fmt(value, m) {
+  if (value === null || value === undefined || value === "") { return "\u2013"; }
+  var v = Number(value);
+  if (isNaN(v)) { return "\u2013"; }
+  var dp = m ? m.dp : 1;
+  if (v.toFixed) { return v.toFixed(dp); }
+  return "" + v;
+}
+
+function ago(seconds) {
+  if (seconds === null) { return "no reading"; }
+  if (seconds < 90) { return "just now"; }
+  if (seconds < 3600) { return Math.round(seconds / 60) + " min ago"; }
+  if (seconds < 86400) { return Math.round(seconds / 3600) + " h ago"; }
+  return Math.round(seconds / 86400) + " d ago";
+}
+
+function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+function byId(id) { return document.getElementById(id); }
+
+/* =========================================================================
+ * REQUESTS - XMLHttpRequest with callbacks, plus our own timeout
+ * ====================================================================== */
+function request(method, url, body, auth, done) {
+  var xhr = new XMLHttpRequest();
+  var finished = false;
+
+  var timer = setTimeout(function () {
+    if (finished) { return; }
+    finished = true;
+    try { xhr.abort(); } catch (e) {}
+    done("The request timed out", null);
+  }, REQUEST_MS);
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4 || finished) { return; }
+    finished = true;
+    clearTimeout(timer);
+    if (xhr.status < 200 || xhr.status >= 300) {
+      done("HTTP " + (xhr.status || "0, no response") + " from " + url, null);
+      return;
+    }
+    var parsed;
+    try { parsed = eval("(" + xhr.responseText + ")"); }
+    catch (e) { done("The response was not readable JSON", null); return; }
+    done(null, parsed);
+  };
+
+  try {
+    xhr.open(method, url, true);
+    if (body) { xhr.setRequestHeader("Content-Type", "application/json"); }
+    if (auth) { xhr.setRequestHeader("Authorization", "Bearer " + auth); }
+    xhr.send(body ? body : null);
+  } catch (e) {
+    if (!finished) {
+      finished = true;
+      clearTimeout(timer);
+      done("The browser refused the request: " + e, null);
+    }
+  }
+}
+
+var token = null;
+var tokenExpires = 0;
+
+function withToken(done) {
+  if (token && tokenExpires > Date.now() + 60000) { done(null, token); return; }
+  var body = '{"grant_type":"client_credentials","client_id":"' + CLIENT_ID +
+    '","client_secret":"' + CLIENT_SECRET + '","scope":["read:device"]}';
+  request("POST", "https://accounts-api.airthings.com/v1/token", body, null, function (err, data) {
+    if (err) { done("Sign in failed. " + err, null); return; }
+    if (!data || !data.access_token) { done("Sign in returned no token", null); return; }
+    token = data.access_token;
+    tokenExpires = Date.now() + (data.expires_in ? data.expires_in * 1000 : 3600000);
+    done(null, token);
+  });
+}
+
+/* Current reading, either straight from Airthings or via the PHP endpoint. */
+function loadReading(done) {
+  if (DATA_URL) {
+    request("GET", DATA_URL + "?api=latest", null, null, function (err, payload) {
+      if (err) { done(err, null); return; }
+      if (!payload || !payload.rooms) { done("The server sent no readings", null); return; }
+      for (var i = 0; i < payload.rooms.length; i++) {
+        if (payload.rooms[i].serial === SERIAL) { done(null, payload.rooms[i].data); return; }
+      }
+      done("Sensor " + SERIAL + " was not in the server response", null);
+    });
+    return;
+  }
+  withToken(function (err, tok) {
+    if (err) { done(err, null); return; }
+    request("GET", "https://ext-api.airthings.com/v1/devices/" + SERIAL + "/latest-samples",
+      null, tok, function (err2, payload) {
+        if (err2) { done(err2, null); return; }
+        done(null, payload && payload.data ? payload.data : null);
+      });
+  });
+}
+
+/* Twenty four hours of history for the big reading. */
+function loadHistory(done) {
+  var to = Math.floor(Date.now() / 1000);
+  var from = to - 86400;
+  if (DATA_URL) {
+    request("GET", DATA_URL + "?api=history&serial=" + SERIAL + "&hours=24", null, null,
+      function (err, payload) {
+        if (err) { done(err, null); return; }
+        done(null, payload && payload.data ? payload.data : null);
+      });
+    return;
+  }
+  withToken(function (err, tok) {
+    if (err) { done(err, null); return; }
+    request("GET", "https://ext-api.airthings.com/v1/devices/" + SERIAL +
+      "/samples?start=" + from + "&end=" + to, null, tok, function (err2, payload) {
+        if (err2) { done(err2, null); return; }
+        done(null, payload && payload.data ? payload.data : null);
+      });
+  });
+}
+
+/* =========================================================================
+ * PAINTING
+ * ====================================================================== */
+function showAlert(message) {
+  var box = byId("alert");
+  if (!message) { box.style.display = "none"; box.innerHTML = ""; return; }
+  box.innerHTML = message;
+  box.style.display = "block";
+}
+
+function paintReading(data) {
+  var heroMetric = metricFor(HERO_KEY);
+  var heroValue = data[HERO_KEY];
+  var heroStatus = statusOf(HERO_KEY, heroValue);
+
+  byId("heroValue").innerHTML = fmt(heroValue, heroMetric) +
+    (heroMetric.unit ? ' <span class="u">' + heroMetric.unit + "</span>" : "");
+  byId("heroValue").className = heroStatus;
+
+  var age = data.time ? Math.floor(Date.now() / 1000) - data.time : null;
+  var stale = (age === null || age > 1200);
+  var worst = worstOf(data);
+  var word = stale ? "No recent data"
+    : (worst === "poor" ? "Action" : (worst === "fair" ? "Watch" : "Within guidance"));
+  var tone = stale ? "dorm" : (worst === "poor" ? "poor" : (worst === "fair" ? "fair" : "good"));
+
+  byId("stateWord").innerHTML = word;
+  byId("stateWord").className = tone;
+  byId("roomName").innerHTML = ROOM_NAME;
+  byId("roomMeta").innerHTML = "Airthings " + SERIAL + " &middot; reading " + ago(age);
+  byId("footRight").innerHTML = "Last reading " + ago(age);
+
+  var shown = 0;
+  for (var i = 0; i < TILE_KEYS.length && shown < 6; i++) {
+    var key = TILE_KEYS[i];
+    if (data[key] === null || data[key] === undefined) { continue; }
+    var m = metricFor(key);
+    var tile = byId("tile" + shown);
+    tile.innerHTML = '<div class="tileLab">' + m.label + '</div>' +
+      '<div class="tileVal ' + statusOf(key, data[key]) + '">' + fmt(data[key], m) +
+      (m.unit ? ' <span class="tileUnit">' + m.unit + '</span>' : '') + '</div>';
+    tile.style.display = "block";
+    shown++;
+  }
+  for (var j = shown; j < 6; j++) { byId("tile" + j).style.display = "none"; }
+}
+
+/* The trend chart is a row of absolutely positioned divs, so no SVG is needed. */
+function paintChart(history) {
+  var chart = byId("chart");
+  var stats = byId("heroStats");
+  if (!history || !history[HERO_KEY]) {
+    chart.innerHTML = "";
+    stats.innerHTML = "History unavailable";
+    return;
+  }
+
+  var raw = history[HERO_KEY];
+  var points = [];
+  for (var i = 0; i < raw.length; i++) {
+    if (raw[i] === null || raw[i] === undefined) { continue; }
+    points.push(Number(raw[i]));
+  }
+  if (!points.length) { chart.innerHTML = ""; stats.innerHTML = "No history yet"; return; }
+
+  var low = points[0], high = points[0], total = 0;
+  for (var p = 0; p < points.length; p++) {
+    if (points[p] < low) { low = points[p]; }
+    if (points[p] > high) { high = points[p]; }
+    total += points[p];
+  }
+  var span = high - low;
+  if (span < 1) { span = 1; }
+
+  /* Fit the samples into 100 columns across the 700px chart. */
+  var columns = 100;
+  var step = points.length / columns;
+  var html = "";
+  for (var c = 0; c < columns; c++) {
+    var start = Math.floor(c * step);
+    var end = Math.floor((c + 1) * step);
+    if (end <= start) { end = start + 1; }
+    var sum = 0, count = 0;
+    for (var s = start; s < end && s < points.length; s++) { sum += points[s]; count++; }
+    if (!count) { continue; }
+    var value = sum / count;
+    var height = Math.round(((value - low) / span) * 140) + 4;
+    var colour = statusOf(HERO_KEY, value);
+    var hex = colour === "poor" ? "#ff9862" : (colour === "fair" ? "#ffcc53" : "#59d8a1");
+    html += '<div class="bar" style="left:' + (c * 7) + 'px;height:' + height +
+            'px;background:' + hex + ';"></div>';
+  }
+  chart.innerHTML = html;
+
+  var m = metricFor(HERO_KEY);
+  stats.innerHTML = "low " + fmt(low, m) + "&nbsp;&nbsp;high " + fmt(high, m) +
+    "&nbsp;&nbsp;average " + fmt(total / points.length, m) +
+    "&nbsp;&nbsp;" + points.length + " readings";
+}
+
+/* =========================================================================
+ * RUNNING
+ * ====================================================================== */
+var failures = 0;
+var lastReadingAt = 0;
+
+function tickClock() {
+  var now = new Date();
+  byId("clock").innerHTML = pad2(now.getHours()) + ":" + pad2(now.getMinutes());
+  if (lastReadingAt) {
+    byId("live").innerHTML = "Live from Airthings &middot; <b>" +
+      ago(Math.floor((Date.now() - lastReadingAt) / 1000)) + "</b>";
+  }
+}
+
+function refresh() {
+  loadReading(function (err, data) {
+    if (err || !data) {
+      failures++;
+      var wait = Math.min(120, 15 * failures);
+      showAlert("No data from Airthings: " + (err || "empty response") +
+        ". Retrying in " + wait + " seconds.");
+      setTimeout(refresh, wait * 1000);
+      return;
+    }
+    failures = 0;
+    showAlert("");
+    lastReadingAt = Date.now();
+    paintReading(data);
+    loadHistory(function (err2, history) {
+      if (!err2) { paintChart(history); }
+      else { byId("heroStats").innerHTML = "History unavailable"; }
+    });
+    setTimeout(refresh, REFRESH_MS);
+  });
+}
+
+tickClock();
+setInterval(tickClock, 1000);
+refresh();
+
+/* A screen left running for weeks benefits from an occasional clean start.
+   The meta refresh in the head does the same job if scripting is interrupted. */
+setTimeout(function () { window.location.reload(true); }, RELOAD_HOURS * 3600000);
+</script>
+</body>
+</html>
