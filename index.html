@@ -1,0 +1,1082 @@
+<!--
+  Royal College of Physicians - Outside meeting rooms, Level 10
+  The Spine, Paddington Village.
+
+  Single space display, laid out for an 800 x 1280 portrait panel.
+  No cycling: this screen shows one room and refreshes it every five minutes.
+
+  Note: the API client id and secret are in the CONFIG block below in plain text.
+  Anyone who can open or view-source this file can read the estate's sensor data.
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=800, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Outside meeting rooms - Indoor Environment</title>
+<link rel="icon" href="data:image/png;base64,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">
+<style>
+/*
+ * Royal College of Physicians brand fonts.
+ * rcp.ac.uk serves its font files without CORS headers, so a page opened from
+ * anywhere else cannot borrow them. Put the four .woff2 files in a "fonts"
+ * folder next to this file and they will be used; without them the page falls
+ * back to Rockwell then Arial.
+ */
+@font-face{font-family:"RCP Slab";src:url("fonts/museo-slab.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"RCP Slab";src:url("fonts/museo-slab-bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"RCP Sans";src:url("fonts/fs-albert.woff2") format("woff2");font-weight:300;font-display:swap}
+@font-face{font-family:"RCP Sans";src:url("fonts/fs-albert-bold.woff2") format("woff2");font-weight:700;font-display:swap}
+
+:root{
+  /* rcp.ac.uk palette */
+  --navy:#1b2840;
+  --green:#59d8a1;
+  --red:#a22027;
+  --orange:#ff9862;
+  --yellow:#ffcc53;
+  --serif:"RCP Slab","Museo Slab",Rockwell,"Roboto Slab",Georgia,serif;
+  --sans:"RCP Sans","FS Albert","Segoe UI",Arial,Helvetica,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--navy);color:#fff;
+  font-family:var(--sans);font-weight:300;line-height:1.5;
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0;font-family:var(--serif);font-weight:700;letter-spacing:-.005em}
+
+/* ---------- display mode ---------- */
+.kiosk{
+  position:fixed;inset:0;z-index:100;display:none;flex-direction:column;
+  background:var(--navy);color:#fff;overflow:hidden;cursor:none;
+  font-size:clamp(14px,1.05vw,22px);
+}
+body.on-display{overflow:hidden}
+body.on-display .kiosk{display:flex}
+.kiosk-head{
+  display:flex;align-items:center;gap:2vw;padding:1.6vh 2.2vw;
+  border-bottom:1px solid rgba(255,255,255,.14);flex:none;
+}
+.kiosk-head img{height:min(5.6vh,4.4vw);min-height:32px;width:auto}
+.kiosk-head .k-title{font-family:var(--serif);font-weight:700;font-size:min(2.4vh,1.9vw);letter-spacing:-.01em}
+.kiosk-head .k-sub{font-size:1.6vh;color:rgba(255,255,255,.62);letter-spacing:.1em;text-transform:uppercase}
+.kiosk-head .k-right{margin-left:auto;text-align:right;display:flex;align-items:center;gap:2vw}
+.kiosk-head .k-clock{font-family:var(--mono);font-size:min(3.2vh,2.6vw);line-height:1;font-variant-numeric:tabular-nums}
+.kiosk-head .k-live{font-size:1.5vh;color:rgba(255,255,255,.62)}
+.kiosk-head .k-live b{color:var(--green);font-weight:700}
+
+.kiosk-stage{flex:1;position:relative;min-height:0}
+.slide{position:absolute;inset:0;padding:2.6vh 2.2vw;display:flex;flex-direction:column;opacity:0;transition:opacity .5s ease}
+.slide.on{opacity:1}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}}
+
+.slide-head{display:flex;align-items:flex-end;gap:2vw;flex:none;margin-bottom:2.2vh}
+.slide-head h2{font-family:var(--serif);font-size:min(6vh,4.4vw);line-height:1.04;font-weight:700}
+.slide-head .s-meta{font-size:1.8vh;color:rgba(255,255,255,.66);margin-top:.7vh}
+.slide-head .s-floor{
+  font-size:1.7vh;letter-spacing:.14em;text-transform:uppercase;color:var(--green);
+  border:1px solid rgba(89,216,161,.5);border-radius:999px;padding:.5vh 1.1vw;
+}
+.s-state{margin-left:auto;text-align:right;flex:none}
+.s-state b{display:block;font-family:var(--serif);font-size:min(3.4vh,2.6vw);font-weight:700}
+.s-state span{font-size:1.5vh;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.good-t{color:var(--green)}.fair-t{color:var(--yellow)}.poor-t{color:var(--orange)}.dorm-t{color:rgba(255,255,255,.55)}
+
+.slide-body{flex:1;display:grid;grid-template-columns:1.35fr 1fr;gap:1.6vw;min-height:0}
+.hero{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:1.2vh;
+  padding:2.4vh 1.8vw;display:flex;flex-direction:column;min-height:0;
+}
+.hero .h-label{font-size:1.8vh;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+.hero .h-value{
+  font-family:var(--mono);font-size:min(13vh,9vw);line-height:1;letter-spacing:-.04em;margin:1vh 0 .8vh;
+  display:flex;align-items:baseline;gap:.6vw;
+}
+.hero .h-unit{font-size:2.6vh;color:rgba(255,255,255,.72);font-family:var(--sans);letter-spacing:.02em}
+.hero .h-stats{font-size:1.7vh;color:rgba(255,255,255,.62);font-family:var(--mono)}
+.hero svg{flex:1;width:100%;min-height:0;margin-top:1.6vh}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:1.1vh 1vw;min-height:0}
+.tile{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:1vh;
+  padding:1.4vh 1vw;display:flex;flex-direction:column;justify-content:center;min-width:0;
+}
+.tile .t-lab{font-size:1.5vh;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .t-val{font-family:var(--mono);font-size:min(4.2vh,3.4vw);line-height:1.05;letter-spacing:-.02em;margin-top:.5vh;white-space:nowrap}
+.tile .t-val small{font-family:var(--sans);font-size:1.7vh;color:rgba(255,255,255,.7);margin-left:.35vw}
+
+/* floor summary slide */
+.floor-grid{
+  flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(15vw,1fr));
+  grid-auto-rows:minmax(0,1fr);gap:1.4vh 1.2vw;overflow:hidden;min-height:0;
+}
+.floor-grid .f-card{display:flex;flex-direction:column;justify-content:center}
+.floor-grid.few{grid-template-columns:repeat(auto-fit,minmax(24vw,1fr));grid-auto-rows:minmax(0,34vh);align-content:center}
+.floor-grid.few .f-card h3{font-size:3.2vh}
+.floor-grid.few .f-val{font-size:8vh}
+.floor-grid.few .f-val small{font-size:2.6vh}
+.floor-grid.mid .f-card h3{font-size:2.4vh}
+.floor-grid.mid .f-val{font-size:5vh}
+.floor-grid.many .f-card{padding:1.1vh .9vw}
+.floor-grid.many .f-card h3{font-size:1.9vh}
+.floor-grid.many .f-val{font-size:3.6vh}
+.floor-grid.many .f-val small{font-size:1.4vh}
+.floor-grid.many .f-line{display:none}
+.floor-grid.many .f-state{font-size:1.2vh;margin-top:.5vh}
+.f-line{display:flex;flex-wrap:wrap;gap:.4vh 1.4vw;margin-top:1vh;font-size:1.6vh;color:rgba(255,255,255,.72)}
+.f-line span{font-family:var(--mono)}
+.f-line span i{font-style:normal;color:rgba(255,255,255,.5);margin-right:.3vw;font-family:var(--sans)}
+.floor-grid.few .f-line{font-size:2.1vh;margin-top:1.6vh}
+.f-state{font-size:1.4vh;letter-spacing:.12em;text-transform:uppercase;margin-top:.8vh}
+.f-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-left:.5vh solid var(--green);border-radius:1vh;padding:1.4vh 1vw}
+.f-card.fair{border-left-color:var(--yellow)}
+.f-card.poor{border-left-color:var(--orange)}
+.f-card.dorm{border-left-color:rgba(255,255,255,.3)}
+.f-card h3{font-family:var(--serif);font-size:2.1vh;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-card .f-val{font-family:var(--mono);font-size:min(3.4vh,3vw);margin-top:.6vh;white-space:nowrap}
+.f-card .f-val small{font-family:var(--sans);font-size:1.5vh;color:rgba(255,255,255,.65);margin-left:.3vw}
+.f-card .f-sub{font-size:1.5vh;color:rgba(255,255,255,.6);margin-top:.4vh;font-family:var(--mono)}
+.floor-numeral{font-family:var(--serif);font-size:min(11vh,8vw);line-height:.85;font-weight:700;color:var(--green)}
+
+.kiosk-foot{
+  flex:none;display:flex;align-items:center;gap:1.6vw;padding:1.4vh 2.2vw;
+  border-top:1px solid rgba(255,255,255,.14);font-size:1.6vh;color:rgba(255,255,255,.7);
+}
+.kiosk-foot .k-next{margin-left:auto;text-align:right}
+.kiosk-foot .k-next b{color:#fff;font-weight:700}
+.progress{position:absolute;left:0;right:0;bottom:0;height:.5vh;background:rgba(255,255,255,.12)}
+.progress i{display:block;height:100%;width:0;background:var(--green)}
+.kiosk-foot{position:relative}
+.paused .progress i{background:var(--yellow)}
+.kiosk-alert{
+  flex:none;padding:1.2vh 2.2vw;background:var(--red);color:#fff;
+  font-size:1.7vh;display:none;
+}
+.kiosk-alert.on{display:block}
+
+/* Portrait screens: stack the hero above the tiles. */
+@media (max-aspect-ratio: 4/5){
+  .slide-body{grid-template-columns:1fr;grid-template-rows:1.15fr 1fr;gap:1.6vh}
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tiles>.tile:nth-child(n+7){display:none}
+  .tile .t-lab{font-size:1.6vw}
+  .tile .t-val{font-size:5vw}
+  .tile .t-val small{font-size:1.8vw}
+  .hero .h-value{font-size:14vw}
+  .hero .h-label,.hero .h-stats{font-size:2vw}
+  .slide-head{flex-wrap:wrap;gap:1.4vw}
+  .slide-head h2{font-size:6.4vw}
+  .slide-head .s-meta{font-size:2vw}
+  .s-state{margin-left:0}
+  .s-state b{font-size:4vw}
+  .floor-grid,.floor-grid.few,.floor-grid.mid{grid-template-columns:repeat(2,1fr)}
+  .floor-grid.many{grid-template-columns:repeat(2,1fr)}
+  .f-card h3{font-size:2.6vw}
+  .floor-grid .f-val{font-size:5vw}
+  .kiosk-head img{height:7vw}
+  .kiosk-head .k-title{font-size:2.6vw}
+  .kiosk-head .k-sub{font-size:1.7vw}
+  .kiosk-head .k-clock{font-size:4vw}
+  .kiosk-foot{font-size:1.8vw}
+}
+
+
+
+/* This page is only ever the display, so the kiosk layer is always on. */
+.kiosk{display:flex}
+
+
+/* ---------- fixed 800 x 1280 portrait panel ---------- */
+/*
+ * Sized against the panel rather than the viewport, so the layout is identical
+ * whether the browser reports 800x1280, is scaled, or is opened on a desktop.
+ */
+html{font-size:16px}
+.kiosk{font-size:18px}
+.kiosk-head{padding:22px 26px;gap:20px}
+.kiosk-head img{height:56px;min-height:0}
+.kiosk-head .k-title{font-size:24px}
+.kiosk-head .k-sub{font-size:14px}
+.kiosk-head .k-right{gap:0}
+.kiosk-head .k-clock{font-size:34px}
+.kiosk-head .k-live{font-size:14px}
+
+.slide{padding:24px 26px}
+.slide-head{flex-wrap:wrap;gap:14px;margin-bottom:24px}
+.slide-head h2{font-size:48px;line-height:1.02;flex:1 1 100%}
+.slide-head .s-meta{font-size:17px;margin-top:8px}
+.slide-head .s-floor{font-size:16px;padding:6px 16px}
+.s-state{margin-left:auto}
+.s-state b{font-size:30px}
+.s-state span{font-size:13px}
+
+.slide-body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:20px;min-height:0}
+.hero{padding:26px 26px 22px}
+.hero .h-label{font-size:18px;letter-spacing:.12em}
+.hero .h-value{font-size:132px;margin:8px 0 6px;gap:12px}
+.hero .h-unit{font-size:32px}
+.hero .h-stats{font-size:17px}
+.hero svg{height:220px;flex:none;margin-top:16px}
+
+.tiles{grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(0,1fr);gap:14px;min-height:0}
+.tile{padding:14px 20px;border-radius:12px}
+.tile .t-lab{font-size:15px;letter-spacing:.1em}
+.tile .t-val{font-size:42px;margin-top:6px}
+.tile .t-val small{font-size:18px;margin-left:6px}
+
+.kiosk-foot{padding:16px 26px;font-size:15px}
+.kiosk-alert{padding:14px 26px;font-size:16px}
+.progress{height:5px}
+
+</style>
+</head>
+<body>
+<section class="kiosk" id="kiosk" aria-label="Indoor environment display">
+  <div class="kiosk-alert" id="kioskAlert"></div>
+  <div class="kiosk-head">
+    <img src="data:image/png;base64,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" alt="Royal College of Physicians">
+    <div>
+      <div class="k-title">Indoor Environment</div>
+      <div class="k-sub">Level 10 &middot; The Spine</div>
+    </div>
+    <div class="k-right">
+      <div>
+        <div class="k-clock" id="kClock">--:--</div>
+        <div class="k-live" id="kLive">Connecting to Airthings</div>
+      </div>
+    </div>
+  </div>
+  <div class="kiosk-stage" id="kStage"></div>
+  <div class="kiosk-foot">
+    <span id="kPosition">Loading</span>
+    <span id="kHint">Space pauses &middot; arrows move</span>
+    <span class="k-next" id="kNext"></span>
+    <span class="progress"><i id="kProgress"></i></span>
+  </div>
+</section>
+<script>
+"use strict";
+
+/* ---------------------------------------------------------------------------
+ * CONFIGURATION - everything you are likely to change lives here.
+ * ------------------------------------------------------------------------ */
+const CONFIG = {
+  /* Airthings for Business API client, Client Credentials flow, scope read:device.
+     Anyone who can open this file can read these values. Keep it on the display
+     machine or an access-controlled internal share. */
+  clientId: "d5b3d738-f09c-4f89-8939-ab595b334cf0",
+  clientSecret: "9f705a28-a3a9-4c64-b6a2-eec50f22a3db",
+
+  locationId: "",
+
+  /* This screen shows one space only, so there is nothing to cycle through.
+     To point it at a different room, change onlySerials to that device's serial,
+     or clear it and put the room name in onlyRooms. */
+  onlySerials: ["2969002772"],       // Outside meeting rooms, Level 10
+  onlyRooms: [],
+  onlyFloors: [],
+
+  dwell: 14,
+  floorSlides: false,
+
+  /* Seconds between data refreshes. Sensors report every 2.5 to 5 minutes. */
+  refresh: 300,
+
+  /* The large reading, and how many supporting tiles fit this portrait panel. */
+  heroMetric: "co2",
+  tileCount: 6,
+
+  reloadHours: 6,
+
+  /* Floors for rooms whose names do not contain one, keyed by device serial. */
+  floors: {
+    "2969003664": "Level 13",     // Flyover
+    "2969002937": "Level 13",     // Space One
+    "2969002729": "Level 13",     // Space Two
+    "2969003652": "Level 13",     // Space Three
+    "2969003857": "Level 13",     // The Axis
+
+    "2969002771": "Level 12",     // Space Four
+    "2969003805": "Level 12",     // Space Five
+    "2969003780": "Level 12",     // Space Six
+    "2969002703": "Level 12",     // Space Seven
+    "2969003655": "Level 12",     // Space Eight
+    "2969003499": "Level 12",     // Space Nine
+    "2969003731": "Level 12",     // Wolfson Lecture Theatre
+    "2969003639": "Level 12",     // Wolfson Virtual Theatre
+
+    "2969002724": "Level 11",     // Assessment Prep Room
+    "2969002710": "Level 11",     // Dinwoodie (inside Assessment Room)
+    "2969002889": "Level 11",     // Jerwood simulation
+    "2969003815": "Level 11",     // Patient holding
+    "2969002728": "Level 11",     // Space 11/Examiner holding
+
+    "2969002772": "Level 10",     // Outside meeting rooms
+    "2969002769": "Level 10",     // UOL outside small office
+    "2969002883": "Level 10",     // Workspace - Side B (near printer)
+
+    "2969002659": "Level 1",      // Reception Desk (facing Novotel)
+
+    "2969002908": "Ground floor"  // Reception
+  }
+};
+
+const AIRTHINGS = {
+  token: "https://accounts-api.airthings.com/v1/token",
+  base: "https://ext-api.airthings.com",
+  maxHistorySamples: 6000,
+  maxHistoryPages: 8
+};
+
+/* ---------------------------------------------------------------------------
+ * 2. AIRTHINGS CLIENT - the work the PHP version does on the server.
+ * ------------------------------------------------------------------------ */
+let accessToken = null;
+let accessTokenExpiry = 0;
+
+async function getToken(force) {
+  if (!force && accessToken && accessTokenExpiry > Date.now() + 60000) return accessToken;
+  if (!CONFIG.clientId || !CONFIG.clientSecret) {
+    throw new Error("No API client configured. Add the client id and secret at the top of this file.");
+  }
+  let res;
+  try {
+    res = await fetch(AIRTHINGS.token, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        grant_type: "client_credentials",
+        client_id: CONFIG.clientId,
+        client_secret: CONFIG.clientSecret,
+        scope: ["read:device"]
+      })
+    });
+  } catch (e) {
+    throw new Error("Cannot reach accounts-api.airthings.com. Check the network and any web filter.");
+  }
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data || !data.access_token) {
+    throw new Error("Token request failed, HTTP " + res.status +
+      ((data && (data.error_description || data.error)) ? ": " + (data.error_description || data.error) : ""));
+  }
+  accessToken = data.access_token;
+  accessTokenExpiry = Date.now() + (data.expires_in || 3600) * 1000;
+  return accessToken;
+}
+
+async function apiGet(path, params, retry) {
+  const url = new URL(AIRTHINGS.base + path);
+  Object.entries(params || {}).forEach(([k, v]) => url.searchParams.set(k, v));
+  let res;
+  try {
+    res = await fetch(url.toString(), { headers: { Authorization: "Bearer " + (await getToken(false)) } });
+  } catch (e) {
+    throw new Error("Cannot reach ext-api.airthings.com. Check the network and any web filter.");
+  }
+  if (res.status === 401 && retry !== false) {
+    await getToken(true);
+    return apiGet(path, params, false);
+  }
+  if (res.status === 429) throw new Error("Airthings rate limit reached. It will clear within the hour.");
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(path + " returned HTTP " + res.status +
+      ((body && (body.error_description || body.error)) ? ": " + (body.error_description || body.error) : ""));
+  }
+  return res.json();
+}
+
+/* Floors are read from room names, because Airthings has no floor field. */
+function deriveFloor(room) {
+  const name = String(room || "").trim();
+  const tests = [
+    [/\b(?:sub[\s-]?basement|b2)\b/i, "Sub-basement", -3],
+    [/\b(?:basement|b1)\b/i, "Basement", -2],
+    [/\b(?:lower[\s-]?ground|lgf|lg)\b/i, "Lower ground", -1],
+    [/\b(?:ground(?:[\s-]?floor)?|gf)\b/i, "Ground floor", 0],
+    [/\b(?:roof|plant\s*room)\b/i, "Roof and plant", 90]
+  ];
+  for (const [re, label, rank] of tests) if (re.test(name)) return [label, rank];
+
+  let m = /\b(\d{1,2})(?:st|nd|rd|th)\s*floor\b/i.exec(name);
+  if (m) return ["Level " + Number(m[1]), Number(m[1])];
+  m = /\b(?:level|floor|lvl|flr|l|f)\s*[-_. ]?(\d{1,2})\b/i.exec(name);
+  if (m) return ["Level " + Number(m[1]), Number(m[1])];
+  if (/\bmezzanine\b/i.test(name)) return ["Mezzanine", 1];
+  m = /\b(\d{1,2})[.\-_](\d{1,3})\b/.exec(name);
+  if (m) return ["Level " + Number(m[1]), Number(m[1])];
+  m = /\b(\d)(\d{2})\b/.exec(name);
+  if (m) return ["Level " + Number(m[1]), Number(m[1])];
+  return ["Unassigned", 95];
+}
+
+const METRIC_KEYS = ["co2", "temp", "humidity", "voc", "pm1", "pm25", "pm10",
+  "radonShortTermAvg", "hourlyRadon", "virusRisk", "mold", "occupants",
+  "airExchangeRate", "airflow", "ventilationAmount", "controlSignal", "sla",
+  "pressure", "lux", "light", "battery", "rssi"];
+
+const ENV_KEYS = ["co2", "temp", "humidity", "voc", "pm1", "pm25", "pm10",
+  "radonShortTermAvg", "hourlyRadon", "virusRisk", "mold", "occupants",
+  "airExchangeRate", "airflow", "sla", "pressure", "lux", "light"];
+
+/* Floor overrides live in this browser, merged over anything set in CONFIG.floors. */
+function storedFloors() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem("rcp-airthings-floors") || "{}"); } catch (e) { saved = {}; }
+  return Object.assign({}, CONFIG.floors, saved);
+}
+
+function saveStoredFloors(map) {
+  const custom = {};
+  Object.entries(map).forEach(([serial, floor]) => { if (floor) custom[serial] = floor; });
+  try { localStorage.setItem("rcp-airthings-floors", JSON.stringify(custom)); } catch (e) { /* private mode */ }
+  return Object.assign({}, CONFIG.floors, custom);
+}
+
+/** Everything the dashboard needs, in the same shape the PHP version returns. */
+async function fetchLatest() {
+  const warnings = [];
+  const floorMap = storedFloors();
+
+  const locRes = await apiGet("/v1/locations");
+  const locations = (locRes.locations || [])
+    .filter(l => !CONFIG.locationId || l.id === CONFIG.locationId)
+    .map(l => ({ id: l.id, name: l.name || "Unnamed location" }));
+  if (!locations.length) throw new Error("The API returned no locations for this client.");
+
+  /* Device metadata only adds product names, so a failure here is not fatal. */
+  const devices = {};
+  try {
+    const devRes = await apiGet("/v1/devices");
+    (devRes.devices || []).forEach(d => {
+      if (d.id) devices[d.id] = { product: d.productName || d.deviceType || "Airthings device" };
+    });
+  } catch (e) {
+    warnings.push("Device list unavailable: " + e.message);
+  }
+
+  const rooms = [];
+  for (const loc of locations) {
+    let res;
+    try {
+      res = await apiGet("/v1/locations/" + encodeURIComponent(loc.id) + "/latest-samples");
+    } catch (e) {
+      warnings.push(loc.name + ": " + e.message);
+      continue;
+    }
+    (res.devices || []).forEach(dev => {
+      const raw = dev.data && typeof dev.data === "object" ? dev.data : {};
+      const data = {};
+      METRIC_KEYS.forEach(k => { if (raw[k] !== undefined && raw[k] !== null) data[k] = raw[k]; });
+      if (raw.time !== undefined) data.time = Number(raw.time);
+      const isSensor = ENV_KEYS.some(k => data[k] !== undefined);
+
+      const roomName = ((dev.segment && dev.segment.name) || dev.id || "").trim() || dev.id;
+      const override = floorMap[dev.id] || "";
+      const [floor, rank] = override ? [override, deriveFloor(override)[1]] : deriveFloor(roomName);
+
+      rooms.push({
+        serial: dev.id,
+        room: roomName,
+        floor: floor,
+        floorRank: rank,
+        location: res.name || loc.name,
+        locationId: loc.id,
+        product: (devices[dev.id] && devices[dev.id].product) || "Airthings device",
+        segmentId: (dev.segment && dev.segment.id) || "",
+        role: isSensor ? "sensor" : "hub",
+        assigned: !!override,
+        time: data.time !== undefined ? data.time : null,
+        data: data
+      });
+    });
+  }
+
+  rooms.sort((a, b) => (a.floorRank - b.floorRank) || a.room.localeCompare(b.room));
+
+  return {
+    ok: true,
+    locations: locations,
+    rooms: rooms,
+    floorMap: floorMap,
+    warnings: warnings,
+    generated: Math.floor(Date.now() / 1000),
+    refresh: CONFIG.refresh,
+    sparklines: CONFIG.sparklines,
+    dwell: CONFIG.dwell,
+    floorSlides: CONFIG.floorSlides,
+    displayOnLoad: CONFIG.displayOnLoad,
+    reloadHours: CONFIG.reloadHours,
+    cached: false
+  };
+}
+
+/** Average seconds between samples in a page, used to size the history request. */
+function sampleCadence(page) {
+  const times = (page && page.data && page.data.time) || [];
+  if (times.length < 2) return 150;
+  const span = Number(times[times.length - 1]) - Number(times[0]);
+  const steps = times.length - 1;
+  if (span <= 0) return 150;
+  return Math.max(30, Math.round(span / steps));
+}
+
+function mergeSamples(into, page) {
+  Object.entries(page || {}).forEach(([k, series]) => {
+    if (Array.isArray(series)) into[k] = (into[k] || []).concat(series);
+  });
+  return into;
+}
+
+/**
+ * Sample history for one device. The endpoint takes start and end as epoch
+ * seconds and pages 1000 samples at a time behind a cursor.
+ */
+async function fetchHistory(serial, hours) {
+  hours = Math.max(1, Math.min(2160, hours));
+  const path = "/v1/devices/" + encodeURIComponent(serial) + "/samples";
+  const to = Math.floor(Date.now() / 1000);
+  let from = to - hours * 3600;
+  let truncated = false;
+
+  let first = await apiGet(path, { start: from, end: to });
+  const cadence = sampleCadence(first);
+  if (cadence > 0 && (to - from) / cadence > AIRTHINGS.maxHistorySamples) {
+    from = to - Math.round(AIRTHINGS.maxHistorySamples * cadence);
+    truncated = true;
+    first = await apiGet(path, { start: from, end: to });
+  }
+
+  let data = first.data && typeof first.data === "object" ? first.data : {};
+  let cursor = first.cursor;
+  let pages = 1;
+  while (cursor && pages < AIRTHINGS.maxHistoryPages &&
+         (data.time || []).length < AIRTHINGS.maxHistorySamples) {
+    const next = await apiGet(path, { start: from, end: to, cursor: cursor });
+    data = mergeSamples(data, next.data || {});
+    cursor = next.cursor;
+    pages++;
+  }
+  if (cursor) truncated = true;
+
+  const count = (data.time || []).length;
+  Object.keys(data).forEach(k => {
+    if (k !== "time" && (!Array.isArray(data[k]) || data[k].length !== count)) delete data[k];
+  });
+
+  return {
+    ok: true, serial: serial, hours: hours, samples: count, pages: pages,
+    cadence: cadence, truncated: truncated, data: data, cached: false
+  };
+}
+
+
+/* ---------------------------------------------------------------------------
+ * Metric catalogue.
+ * bands  : lower is better  -> good up to bands.good, fair up to bands.fair
+ * window : middle is best   -> good inside window.good, fair inside window.fair
+ * floorBand : higher is better
+ * ------------------------------------------------------------------------ */
+const METRICS = [
+  { k: "co2",               short: "CO\u2082",      label: "CO\u2082",        unit: "ppm",      dp: 0, bands: { good: 800, fair: 1000 } },
+  { k: "temp",              short: "Temp",          label: "Temperature",     unit: "\u00b0C",  dp: 1, window: { good: [18, 25], fair: [16, 27] } },
+  { k: "humidity",          short: "Humidity",      label: "Humidity",        unit: "%",        dp: 0, window: { good: [30, 60], fair: [25, 70] } },
+  { k: "voc",               short: "VOC",           label: "VOC",             unit: "ppb",      dp: 0, bands: { good: 250, fair: 2000 } },
+  { k: "pm25",              short: "PM2.5",         label: "PM2.5",           unit: "\u00b5g/m\u00b3", dp: 1, bands: { good: 10, fair: 25 } },
+  { k: "pm1",               short: "PM1",           label: "PM1",             unit: "\u00b5g/m\u00b3", dp: 1, bands: { good: 10, fair: 25 } },
+  { k: "pm10",              short: "PM10",          label: "PM10",            unit: "\u00b5g/m\u00b3", dp: 1, bands: { good: 25, fair: 50 } },
+  { k: "radonShortTermAvg", short: "Radon",         label: "Radon",           unit: "Bq/m\u00b3", dp: 0, bands: { good: 100, fair: 150 } },
+  { k: "hourlyRadon",       short: "Radon/h",       label: "Radon, hourly",   unit: "Bq/m\u00b3", dp: 0, bands: { good: 100, fair: 150 } },
+  { k: "virusRisk",         short: "Virus risk",    label: "Virus risk",      unit: "",         dp: 0, bands: { good: 30, fair: 60 } },
+  { k: "mold",              short: "Mould",         label: "Mould risk",      unit: "",         dp: 1, bands: { good: 2, fair: 4 } },
+  { k: "occupants",         short: "Occupants",     label: "Occupants",       unit: "",         dp: 0 },
+  { k: "airExchangeRate",   short: "Air exch.",     label: "Air exchange",    unit: "ACH",      dp: 2 },
+  { k: "airflow",           short: "Airflow",       label: "Airflow",         unit: "l/s",      dp: 1 },
+  { k: "ventilationAmount", short: "Ventilation",   label: "Ventilation",     unit: "",         dp: 1 },
+  { k: "controlSignal",     short: "Control",       label: "Control signal",  unit: "%",        dp: 0 },
+  { k: "sla",               short: "Sound",         label: "Sound level",     unit: "dBA",      dp: 0 },
+  { k: "pressure",          short: "Pressure",      label: "Pressure",        unit: "hPa",      dp: 0 },
+  { k: "lux",               short: "Light",         label: "Light",           unit: "lux",      dp: 0 },
+  { k: "light",             short: "Light lvl",     label: "Light level",     unit: "",         dp: 0 },
+  { k: "battery",           short: "Battery",       label: "Battery",         unit: "%",        dp: 0, floorBand: { good: 20, fair: 10 } },
+  { k: "rssi",              short: "Signal",        label: "Signal",          unit: "dBm",      dp: 0 }
+];
+const METRIC_BY_KEY = Object.fromEntries(METRICS.map(m => [m.k, m]));
+
+/** Metrics shown as tiles beside the hero, in priority order. */
+const TILE_ORDER = ["temp", "humidity", "voc", "pm25", "pm1", "pm10", "sla", "virusRisk",
+  "airExchangeRate", "radonShortTermAvg", "occupants", "pressure", "lux", "light", "battery", "rssi"];
+
+const STALE_AFTER = 20 * 60;   // a sensor quiet for 20 minutes is flagged
+
+const state = {
+  rooms: [],
+  generated: 0,
+  history: new Map(),
+  failures: 0
+};
+
+const kiosk = {
+  slides: [],
+  index: 0,
+  paused: false,
+  elapsed: 0,
+  startedAt: Date.now(),
+  historyClearedAt: Date.now(),
+  refreshAt: 0
+};
+
+const el = id => document.getElementById(id);
+
+/* ---------------------------------------------------------------------------
+ * Formatting and status
+ * ------------------------------------------------------------------------ */
+function fmt(value, metric) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "\u2013";
+  return Number(value).toFixed(metric ? metric.dp : 1);
+}
+
+function status(key, value) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "";
+  const m = METRIC_BY_KEY[key];
+  if (!m) return "";
+  const v = Number(value);
+  if (m.bands) return v <= m.bands.good ? "good" : (v <= m.bands.fair ? "fair" : "poor");
+  if (m.window) {
+    if (v >= m.window.good[0] && v <= m.window.good[1]) return "good";
+    if (v >= m.window.fair[0] && v <= m.window.fair[1]) return "fair";
+    return "poor";
+  }
+  if (m.floorBand) return v >= m.floorBand.good ? "good" : (v >= m.floorBand.fair ? "fair" : "poor");
+  return "";
+}
+
+function worstStatus(room) {
+  const rank = { "": 0, good: 1, fair: 2, poor: 3 };
+  let worst = "";
+  for (const m of METRICS) {
+    if (m.k === "battery" || m.k === "rssi") continue;
+    const s = status(m.k, room.data ? room.data[m.k] : null);
+    if (rank[s] > rank[worst]) worst = s;
+  }
+  return worst;
+}
+
+function ageSeconds(room) {
+  if (!room.time) return null;
+  return Math.max(0, Math.floor(Date.now() / 1000) - room.time);
+}
+
+function ago(seconds) {
+  if (seconds === null) return "no reading";
+  if (seconds < 90) return "just now";
+  if (seconds < 3600) return Math.round(seconds / 60) + " min ago";
+  if (seconds < 86400) return Math.round(seconds / 3600) + " h ago";
+  return Math.round(seconds / 86400) + " d ago";
+}
+
+function esc(text) {
+  return String(text == null ? "" : text).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function floorNumeral(floor) {
+  const m = /(\d+)/.exec(floor);
+  if (m) return m[1];
+  if (/ground/i.test(floor)) return "G";
+  if (/lower/i.test(floor)) return "LG";
+  if (/sub/i.test(floor)) return "B2";
+  if (/basement/i.test(floor)) return "B";
+  if (/mezz/i.test(floor)) return "M";
+  if (/roof/i.test(floor)) return "R";
+  return "\u00b7";
+}
+
+function statusColour(s) {
+  return s === "good" ? "#59d8a1" : s === "fair" ? "#ffcc53" : s === "poor" ? "#ff9862" : "#ffffff";
+}
+
+function seriesFor(hist, key) {
+  const data = hist && hist.data ? hist.data : {};
+  return {
+    values: Array.isArray(data[key]) ? data[key] : [],
+    times: Array.isArray(data.time) ? data.time : []
+  };
+}
+
+/**
+ * Build an SVG path from sparse samples. Metrics do not all report on every
+ * timestamp, so points are placed by time and the line breaks across outages.
+ */
+function linePath(times, values, geom) {
+  const pts = [];
+  for (let i = 0; i < values.length; i++) {
+    const v = values[i];
+    if (v === null || v === undefined) continue;
+    const t = times.length === values.length ? Number(times[i]) : i;
+    if (!Number.isFinite(t) || !Number.isFinite(Number(v))) continue;
+    pts.push([t, Number(v)]);
+  }
+  if (!pts.length) return null;
+
+  const ys = pts.map(p => p[1]);
+  let vMin = Math.min.apply(null, ys), vMax = Math.max.apply(null, ys);
+  if (vMax - vMin < 1e-9) { vMin -= 1; vMax += 1; }
+  const tMin = pts[0][0], tMax = pts[pts.length - 1][0];
+  const tSpan = tMax - tMin || 1;
+
+  const x = t => geom.padL + ((t - tMin) / tSpan) * (geom.w - geom.padL - geom.padR);
+  const y = v => geom.padT + (1 - (v - vMin) / (vMax - vMin)) * (geom.h - geom.padT - geom.padB);
+
+  const steps = [];
+  for (let i = 1; i < pts.length; i++) steps.push(pts[i][0] - pts[i - 1][0]);
+  steps.sort((a, b) => a - b);
+  const median = steps.length ? steps[Math.floor(steps.length / 2)] : 0;
+  const p90 = steps.length ? steps[Math.floor(steps.length * 0.9)] : 0;
+  const gap = steps.length ? Math.max(p90 * 3, median * 6, 1800) : Infinity;
+
+  let d = "";
+  const isolated = [];
+  pts.forEach((p, i) => {
+    const before = i > 0 ? p[0] - pts[i - 1][0] : Infinity;
+    const after = i < pts.length - 1 ? pts[i + 1][0] - p[0] : Infinity;
+    if (before > gap && after > gap) { isolated.push(p); return; }
+    d += (before > gap || d === "" ? "M" : "L") + x(p[0]).toFixed(1) + " " + y(p[1]).toFixed(1) + " ";
+  });
+
+  return {
+    d: d.trim(), isolated: isolated, last: pts[pts.length - 1],
+    vMin: vMin, vMax: vMax, x: x, y: y, count: pts.length
+  };
+}
+
+/** Lone samples either side of an outage, so they are not silently dropped. */
+function dots(line, colour, r) {
+  return line.isolated.map(p => '<circle cx="' + line.x(p[0]).toFixed(1) + '" cy="' + line.y(p[1]).toFixed(1) +
+    '" r="' + r + '" fill="' + colour + '" opacity="0.75"/>').join("");
+}
+
+/* ---------------------------------------------------------------------------
+ * History, fetched once per space and kept until the periodic clear-out.
+ * ------------------------------------------------------------------------ */
+async function loadHistory(serial, hours) {
+  const key = serial + ":" + hours;
+  if (state.history.has(key)) return state.history.get(key);
+  const payload = await fetchHistory(serial, hours);
+  state.history.set(key, payload);
+  return payload;
+}
+
+/* ---------------------------------------------------------------------------
+ * Slides
+ * ------------------------------------------------------------------------ */
+function selectedRooms() {
+  let rooms = state.rooms.filter(r => r.role !== "hub");
+  if (CONFIG.onlySerials && CONFIG.onlySerials.length) {
+    rooms = rooms.filter(r => CONFIG.onlySerials.includes(r.serial));
+  }
+  if (CONFIG.onlyRooms && CONFIG.onlyRooms.length) {
+    const wanted = CONFIG.onlyRooms.map(n => n.toLowerCase());
+    rooms = rooms.filter(r => wanted.includes(r.room.toLowerCase()));
+  }
+  if (CONFIG.onlyFloors && CONFIG.onlyFloors.length) {
+    const wanted = CONFIG.onlyFloors.map(n => n.toLowerCase());
+    rooms = rooms.filter(r => wanted.includes(r.floor.toLowerCase()));
+  }
+  return rooms;
+}
+
+function buildSlides() {
+  const rooms = selectedRooms();
+  const byFloor = new Map();
+  rooms.forEach(r => {
+    if (!byFloor.has(r.floor)) byFloor.set(r.floor, []);
+    byFloor.get(r.floor).push(r);
+  });
+
+  const perSlide = 12;
+  const slides = [];
+  for (const [floor, list] of byFloor) {
+    if (CONFIG.floorSlides && list.length > 1) {
+      const pages = Math.ceil(list.length / perSlide);
+      for (let p = 0; p < pages; p++) {
+        slides.push({
+          type: "floor", floor: floor, total: list.length,
+          rooms: list.slice(p * perSlide, (p + 1) * perSlide),
+          page: p + 1, pages: pages
+        });
+      }
+    }
+    list.forEach(r => slides.push({ type: "room", room: r }));
+  }
+  return slides;
+}
+
+function showSlide(i) {
+  const slide = kiosk.slides[i];
+  const stage = el("kStage");
+  if (!slide) {
+    stage.innerHTML = '<div class="slide on"><div class="slide-head"><div><h2>Waiting for sensor data</h2>' +
+      '<div class="s-meta">Nothing to show yet. The screen will fill in as soon as readings arrive.</div>' +
+      "</div></div></div>";
+    el("kPosition").textContent = "";
+    el("kNext").textContent = "";
+    return;
+  }
+
+  const node = document.createElement("div");
+  node.className = "slide";
+  node.innerHTML = slide.type === "floor" ? floorSlideHtml(slide) : roomSlideHtml(slide.room);
+  stage.innerHTML = "";
+  stage.appendChild(node);
+  requestAnimationFrame(() => node.classList.add("on"));
+
+  const single = kiosk.slides.length === 1;
+  const roomSlides = kiosk.slides.filter(s => s.type === "room");
+  const roomIndex = slide.type === "room"
+    ? roomSlides.findIndex(s => s.room.serial === slide.room.serial) + 1 : 0;
+
+  el("kPosition").textContent = single
+    ? "Updating every " + Math.round(CONFIG.refresh / 60) + " minutes"
+    : (slide.type === "room"
+        ? "Space " + roomIndex + " of " + roomSlides.length
+        : "Floor summary \u00b7 " + slide.floor) + (kiosk.paused ? " \u00b7 paused" : "");
+
+  if (single) {
+    el("kNext").textContent = "";
+  } else {
+    const next = kiosk.slides[(i + 1) % kiosk.slides.length];
+    el("kNext").innerHTML = "Next <b>" + esc(next.type === "floor" ? next.floor : next.room.room) + "</b>";
+  }
+
+  if (slide.type === "room") {
+    paintHero(slide.room);
+    const following = kiosk.slides[(i + 1) % kiosk.slides.length];
+    if (following && following.type === "room" && following.room.serial !== slide.room.serial) {
+      loadHistory(following.room.serial, 24).catch(() => {});
+    }
+  }
+}
+
+function heroMetric(room) {
+  const data = room.data || {};
+  const preferred = METRIC_BY_KEY[CONFIG.heroMetric] || METRIC_BY_KEY.co2;
+  if (data[preferred.k] !== undefined) return preferred;
+  return METRICS.find(m => data[m.k] !== undefined) || preferred;
+}
+
+function roomSlideHtml(room) {
+  const data = room.data || {};
+  const hero = heroMetric(room);
+  const worst = worstStatus(room);
+  const age = ageSeconds(room);
+  const isStale = age === null || age > STALE_AFTER;
+  const tone = isStale ? "dorm-t" : worst === "poor" ? "poor-t" : worst === "fair" ? "fair-t" : "good-t";
+  const label = isStale ? "No recent data" : worst === "poor" ? "Action" : worst === "fair" ? "Watch" : "Within guidance";
+
+  const tiles = TILE_ORDER.filter(k => k !== hero.k && data[k] !== undefined && data[k] !== null)
+    .slice(0, CONFIG.tileCount || 9)
+    .map(k => {
+      const m = METRIC_BY_KEY[k];
+      const s = status(k, data[k]);
+      const t = s === "poor" ? "poor-t" : s === "fair" ? "fair-t" : s === "good" ? "good-t" : "";
+      return '<div class="tile"><div class="t-lab">' + esc(m.label) + "</div>" +
+        '<div class="t-val ' + t + '">' + fmt(data[k], m) +
+        (m.unit ? "<small>" + esc(m.unit) + "</small>" : "") + "</div></div>";
+    }).join("");
+
+  const heroTone = status(hero.k, data[hero.k]);
+  const heroClass = heroTone === "poor" ? "poor-t" : heroTone === "fair" ? "fair-t" : heroTone === "good" ? "good-t" : "";
+
+  return '<div class="slide-head">' +
+    "<div><h2>" + esc(room.room) + "</h2>" +
+    '<div class="s-meta">' + esc(room.product) + " \u00b7 " + esc(room.serial) +
+    " \u00b7 reading " + esc(ago(age)) + "</div></div>" +
+    '<div class="s-floor">' + esc(room.floor) + "</div>" +
+    '<div class="s-state"><b class="' + tone + '">' + esc(label) + "</b><span>Air quality</span></div></div>" +
+    '<div class="slide-body">' +
+    '<div class="hero"><div class="h-label">' + esc(hero.label) + " over 24 hours</div>" +
+    '<div class="h-value ' + heroClass + '">' + fmt(data[hero.k], hero) +
+    (hero.unit ? '<span class="h-unit">' + esc(hero.unit) + "</span>" : "") + "</div>" +
+    '<div class="h-stats" id="kHeroStats">reading history\u2026</div>' +
+    '<svg id="kHeroChart" viewBox="0 0 800 220" preserveAspectRatio="none" aria-hidden="true"></svg></div>' +
+    '<div class="tiles">' + tiles + "</div></div>";
+}
+
+async function paintHero(room) {
+  const hero = heroMetric(room);
+  const svg = document.getElementById("kHeroChart");
+  const stats = document.getElementById("kHeroStats");
+  if (!svg) return;
+  try {
+    const hist = await loadHistory(room.serial, 24);
+    if (!document.getElementById("kHeroChart")) return;
+    const series = seriesFor(hist, hero.k);
+    const line = linePath(series.times, series.values, { w: 800, h: 220, padL: 4, padR: 4, padT: 12, padB: 8 });
+    if (!line) { if (stats) stats.textContent = "No history for this sensor yet"; return; }
+    const colour = statusColour(status(hero.k, line.last[1]));
+    svg.innerHTML = dots(line, colour, 3) +
+      '<path d="' + line.d + '" fill="none" stroke="' + colour +
+      '" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>';
+    if (stats) {
+      stats.textContent = "low " + fmt(line.vMin, hero) + "  high " + fmt(line.vMax, hero) +
+        "  " + line.count + " readings";
+    }
+  } catch (err) {
+    if (stats) stats.textContent = "History unavailable";
+  }
+}
+
+function floorSlideHtml(slide) {
+  const metric = METRIC_BY_KEY[CONFIG.heroMetric] || METRIC_BY_KEY.co2;
+  const secondary = ["temp", "humidity", "voc", "pm25", "sla"];
+  const cards = slide.rooms.map(r => {
+    const d = r.data || {};
+    const age = ageSeconds(r);
+    const stale = age === null || age > STALE_AFTER;
+    const worst = worstStatus(r);
+    const cls = stale ? "dorm" : worst === "poor" ? "poor" : worst === "fair" ? "fair" : "good";
+    const tone = stale ? "dorm-t" : worst === "poor" ? "poor-t" : worst === "fair" ? "fair-t" : "good-t";
+    const label = stale ? "No recent data" : worst === "poor" ? "Action" : worst === "fair" ? "Watch" : "Within guidance";
+    const line = secondary.filter(k => k !== metric.k && d[k] !== undefined && d[k] !== null)
+      .map(k => {
+        const m = METRIC_BY_KEY[k];
+        return "<span><i>" + esc(m.short || m.label) + "</i>" + fmt(d[k], m) +
+          (m.unit ? " " + esc(m.unit) : "") + "</span>";
+      }).join("");
+    return '<div class="f-card ' + cls + '"><h3>' + esc(r.room) + "</h3>" +
+      '<div class="f-val ' + tone + '">' + fmt(d[metric.k], metric) +
+      (metric.unit ? "<small>" + esc(metric.unit) + "</small>" : "") + "</div>" +
+      '<div class="f-line">' + line + "</div>" +
+      '<div class="f-state ' + tone + '">' + esc(label) + " \u00b7 " + esc(ago(age)) + "</div></div>";
+  }).join("");
+
+  const flagged = slide.rooms.filter(r => ["fair", "poor"].includes(worstStatus(r))).length;
+  const density = slide.rooms.length <= 4 ? "few" : slide.rooms.length <= 8 ? "mid" : "many";
+  const numeral = floorNumeral(slide.floor);
+  const total = slide.total || slide.rooms.length;
+
+  return '<div class="slide-head">' +
+    (numeral === "\u00b7" ? "" : '<div class="floor-numeral">' + esc(numeral) + "</div>") +
+    "<div><h2>" + esc(slide.floor) + "</h2>" +
+    '<div class="s-meta">' + total + (total === 1 ? " space" : " spaces") +
+    (flagged ? " \u00b7 " + flagged + " needing attention on this screen" : " \u00b7 all within guidance") +
+    (slide.pages > 1 ? " \u00b7 part " + slide.page + " of " + slide.pages : "") + "</div></div>" +
+    '<div class="s-state"><b>' + esc(metric.label) + "</b><span>shown per space</span></div></div>" +
+    '<div class="floor-grid ' + density + '">' + cards + "</div>";
+}
+
+/* ---------------------------------------------------------------------------
+ * Running the screen
+ * ------------------------------------------------------------------------ */
+function alertBar(message) {
+  const box = el("kioskAlert");
+  if (!message) { box.classList.remove("on"); box.textContent = ""; return; }
+  box.textContent = message;
+  box.classList.add("on");
+}
+
+function moveSlide(step) {
+  if (kiosk.slides.length < 2) return;
+  kiosk.index = (kiosk.index + step + kiosk.slides.length) % kiosk.slides.length;
+  kiosk.elapsed = 0;
+  showSlide(kiosk.index);
+}
+
+/** Rebuild the running order after new data, staying on the same space. */
+function applyData() {
+  const current = kiosk.slides[kiosk.index];
+  kiosk.slides = buildSlides();
+  let idx = 0;
+  if (current && current.type === "room") {
+    idx = kiosk.slides.findIndex(s => s.type === "room" && s.room.serial === current.room.serial);
+  } else if (current) {
+    idx = kiosk.slides.findIndex(s => s.type === "floor" && s.floor === current.floor);
+  }
+  kiosk.index = idx < 0 ? 0 : idx;
+  showSlide(kiosk.index);
+}
+
+async function refreshData() {
+  try {
+    const data = await fetchLatest();
+    state.rooms = data.rooms || [];
+    state.generated = data.generated;
+    state.failures = 0;
+    alertBar("");
+    if (!selectedRooms().length) {
+      alertBar("No sensors matched this screen's filter. Check onlyRooms or onlySerials in the config block.");
+    }
+    applyData();
+  } catch (err) {
+    state.failures++;
+    alertBar("No data from Airthings: " + err.message +
+      " Retrying in " + Math.round(retryDelay() / 1000) + " s.");
+    if (!state.rooms.length) showSlide(kiosk.index);
+  }
+  kiosk.refreshAt = Date.now() + (state.failures ? retryDelay() : CONFIG.refresh * 1000);
+}
+
+/** Back off gently while the API or network is down, up to two minutes. */
+function retryDelay() {
+  return Math.min(120000, 15000 * Math.max(1, state.failures));
+}
+
+function tick() {
+  const now = new Date();
+  el("kClock").textContent = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  const age = state.generated ? Math.floor(Date.now() / 1000) - state.generated : null;
+  el("kLive").innerHTML = age === null ? "Connecting to Airthings"
+    : "Live from Airthings \u00b7 <b>" + esc(ago(age)) + "</b>";
+
+  if (Date.now() >= kiosk.refreshAt) {
+    kiosk.refreshAt = Date.now() + 15000;   // guard against overlapping calls
+    refreshData();
+  }
+
+  if (kiosk.slides.length > 1 && !kiosk.paused) {
+    kiosk.elapsed += 0.25;
+    el("kProgress").style.width = Math.min(100, (kiosk.elapsed / CONFIG.dwell) * 100) + "%";
+    if (kiosk.elapsed >= CONFIG.dwell) moveSlide(1);
+  } else {
+    el("kProgress").style.width = "0%";
+  }
+
+  // Charts are cached in the page, so drop them periodically to keep trends current.
+  if (Date.now() - kiosk.historyClearedAt > 1800000) {
+    state.history.clear();
+    kiosk.historyClearedAt = Date.now();
+    showSlide(kiosk.index);
+  }
+
+  // A screen left running for weeks benefits from an occasional clean start.
+  if ((Date.now() - kiosk.startedAt) / 3600000 >= CONFIG.reloadHours) location.reload();
+}
+
+document.addEventListener("keydown", ev => {
+  if (ev.key === " ") {
+    ev.preventDefault();
+    kiosk.paused = !kiosk.paused;
+    el("kiosk").classList.toggle("paused", kiosk.paused);
+    showSlide(kiosk.index);
+    return;
+  }
+  if (ev.key === "ArrowRight") moveSlide(1);
+  if (ev.key === "ArrowLeft") moveSlide(-1);
+  if (ev.key.toLowerCase() === "f" && document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+});
+
+setTimeout(() => { el("kHint").style.display = "none"; }, 30000);
+showSlide(0);
+kiosk.refreshAt = Date.now() + 15000;   // the boot fetch below owns this cycle
+refreshData();
+setInterval(tick, 250);
+
+</script>
+</body>
+</html>
